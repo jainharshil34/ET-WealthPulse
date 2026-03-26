@@ -123,6 +123,22 @@ def inject_styles() -> None:
             color: #eef6ff !important;
             background-color: rgba(255, 255, 255, 0.1) !important;
         }
+        @media (prefers-color-scheme: light) {
+            [data-testid="stSidebar"] {
+                color: #1f2a30 !important;
+            }
+            [data-testid="stSidebar"] div, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+                color: #1f2a30 !important;
+            }
+            [data-testid="stSidebar"] input, [data-testid="stSidebar"] textarea, [data-testid="stSidebar"] select {
+                color: #1f2a30 !important;
+                background-color: rgba(0, 0, 0, 0.05) !important;
+            }
+            [data-testid="stSidebar"] .stButton>button {
+                color: #1f2a30 !important;
+                background-color: rgba(0, 0, 0, 0.08) !important;
+            }
+        }
         .stButton>button, .stSelectbox>div>div>div>div, .stTextInput>div>div>input {
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
