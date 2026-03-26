@@ -108,12 +108,20 @@ def inject_styles() -> None:
             font-size: 0.92rem;
         }
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #0f1d2a 0%, #12263b 100%);
-            color: #f1f8ff;
+            background: linear-gradient(180deg, #0f1d2a 0%, #12263b 100%) !important;
+            color: #f1f8ff !important;
             box-shadow: 0 0 28px rgba(0, 0, 0, 0.45);
         }
         [data-testid="stSidebar"] div, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
             color: #eef6ff !important;
+        }
+        [data-testid="stSidebar"] input, [data-testid="stSidebar"] textarea, [data-testid="stSidebar"] select {
+            color: #eef6ff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-testid="stSidebar"] .stButton>button {
+            color: #eef6ff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
         .stButton>button, .stSelectbox>div>div>div>div, .stTextInput>div>div>input {
             transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -446,149 +454,156 @@ with st.sidebar:
         gold = st.number_input("Gold %", min_value=0.0, max_value=100.0, value=float(demo_profile.get("asset_mix", {}).get("Gold", 0.0) if use_demo else 0.0))
         cash = st.number_input("Cash %", min_value=0.0, max_value=100.0, value=float(demo_profile.get("asset_mix", {}).get("Cash", 0.0) if use_demo else 0.0))
 
+    recalculate = st.button("🔄 Recalculate", help="Force a full recalculation with current inputs")
 
-form16_bytes = demo_docs["form16_bytes"] if use_demo and demo_docs else (form16_upload.getvalue() if form16_upload else None)
-cas_bytes = demo_docs["cas_bytes"] if use_demo and demo_docs else (cas_upload.getvalue() if cas_upload else None)
-form16_source_label = "Built-in demo Form 16" if use_demo else (form16_upload.name if form16_upload else "No Form 16")
-cas_source_label = "Built-in demo CAMS statement" if use_demo else (cas_upload.name if cas_upload else "No CAMS statement")
 
-form16_result = parse_uploaded_form16(form16_bytes, form16_source_label)
-cas_result = parse_uploaded_cas(cas_bytes, cas_source_label)
+if recalculate or 'analysis_context' not in st.session_state:
+    form16_bytes = demo_docs["form16_bytes"] if use_demo and demo_docs else (form16_upload.getvalue() if form16_upload else None)
+    cas_bytes = demo_docs["cas_bytes"] if use_demo and demo_docs else (cas_upload.getvalue() if cas_upload else None)
+    form16_source_label = "Built-in demo Form 16" if use_demo else (form16_upload.name if form16_upload else "No Form 16")
+    cas_source_label = "Built-in demo CAMS statement" if use_demo else (cas_upload.name if cas_upload else "No CAMS statement")
 
-st.session_state["form16_parse_failed"] = form16_result.get("available", False) and not form16_result.get("usable", False)
-st.session_state["cas_parse_failed"] = cas_result.get("available", False) and not cas_result.get("usable", False)
+    form16_result = parse_uploaded_form16(form16_bytes, form16_source_label)
+    cas_result = parse_uploaded_cas(cas_bytes, cas_source_label)
 
-manual_tax_available = manual_gross_salary > 0
-manual_transactions = sanitize_manual_transactions(transactions_editor)
-manual_holdings = sanitize_manual_holdings(holdings_editor)
-manual_portfolio_available = not manual_transactions.empty or not manual_holdings.empty
+    st.session_state["form16_parse_failed"] = form16_result.get("available", False) and not form16_result.get("usable", False)
+    st.session_state["cas_parse_failed"] = cas_result.get("available", False) and not cas_result.get("usable", False)
 
-use_manual_tax = not form16_result.get("usable", False) and manual_tax_available
-use_manual_portfolio = not cas_result.get("usable", False) and manual_portfolio_available
+    manual_tax_available = manual_gross_salary > 0
+    manual_transactions = sanitize_manual_transactions(transactions_editor)
+    manual_holdings = sanitize_manual_holdings(holdings_editor)
+    manual_portfolio_available = not manual_transactions.empty or not manual_holdings.empty
 
-tax_payload = form16_result.get("parsed", {}) if form16_result.get("usable", False) else {
-    "gross_salary": manual_gross_salary,
-    "section_80c": manual_80c,
-    "section_80d": manual_80d,
-    "hra_exemption": manual_hra,
-    "employer_nps": manual_nps,
-}
+    use_manual_tax = not form16_result.get("usable", False) and manual_tax_available
+    use_manual_portfolio = not cas_result.get("usable", False) and manual_portfolio_available
 
-portfolio_payload = cas_result.get("parsed", {}) if cas_result.get("usable", False) else {
-    "folios": sorted(manual_transactions["folio_number"].dropna().astype(str).unique().tolist()) if not manual_transactions.empty else sorted(manual_holdings["folio_number"].dropna().astype(str).unique().tolist()),
-    "isins": sorted(manual_transactions["isin"].dropna().astype(str).unique().tolist()) if not manual_transactions.empty else sorted(manual_holdings["isin"].dropna().astype(str).unique().tolist()),
-    "transaction_dates": manual_transactions["date"].dt.date.sort_values().tolist() if not manual_transactions.empty else [],
-    "transactions": manual_transactions,
-    "holdings": manual_holdings,
-    "statement_date": pd.Timestamp.today().normalize(),
-}
+    tax_payload = form16_result.get("parsed", {}) if form16_result.get("usable", False) else {
+        "gross_salary": manual_gross_salary,
+        "section_80c": manual_80c,
+        "section_80d": manual_80d,
+        "hra_exemption": manual_hra,
+        "employer_nps": manual_nps,
+    }
 
-tax_ready = tax_payload.get("gross_salary", 0.0) > 0
-portfolio_ready = not portfolio_payload.get("transactions", pd.DataFrame()).empty or not portfolio_payload.get("holdings", pd.DataFrame()).empty
+    portfolio_payload = cas_result.get("parsed", {}) if cas_result.get("usable", False) else {
+        "folios": sorted(manual_transactions["folio_number"].dropna().astype(str).unique().tolist()) if not manual_transactions.empty else sorted(manual_holdings["folio_number"].dropna().astype(str).unique().tolist()),
+        "isins": sorted(manual_transactions["isin"].dropna().astype(str).unique().tolist()) if not manual_transactions.empty else sorted(manual_holdings["isin"].dropna().astype(str).unique().tolist()),
+        "transaction_dates": manual_transactions["date"].dt.date.sort_values().tolist() if not manual_transactions.empty else [],
+        "transactions": manual_transactions,
+        "holdings": manual_holdings,
+        "statement_date": pd.Timestamp.today().normalize(),
+    }
 
-with st.chat_message("assistant"):
-    st.markdown(
-        """
-        I can read PDFs locally, but if a document is image-only or structured differently from expected patterns,
-        I will fall back to the manual entry panels in the sidebar and keep the rest of the analysis moving.
-        """
+    tax_ready = tax_payload.get("gross_salary", 0.0) > 0
+    portfolio_ready = not portfolio_payload.get("transactions", pd.DataFrame()).empty or not portfolio_payload.get("holdings", pd.DataFrame()).empty
+
+    with st.chat_message("assistant"):
+        st.markdown(
+            """
+            I can read PDFs locally, but if a document is image-only or structured differently from expected patterns,
+            I will fall back to the manual entry panels in the sidebar and keep the rest of the analysis moving.
+            """
+        )
+
+    if form16_result.get("available") and not form16_result.get("usable", False):
+        if not manual_tax_available:
+            with st.chat_message("assistant"):
+                st.warning("I could not confidently extract your Form 16. Please use the Manual Tax Fallback panel in the sidebar.")
+                if form16_result.get("error"):
+                    st.caption(f"Parser note: {form16_result['error']}")
+        else:
+            with st.chat_message("assistant"):
+                st.success("Form 16 parsing failed, but manual tax values are available and being used.")
+
+    if cas_result.get("available") and not cas_result.get("usable", False):
+        if not manual_portfolio_available:
+            with st.chat_message("assistant"):
+                st.warning("I could not confidently extract your CAMS/KFintech statement. Please use the Manual MF Fallback panel in the sidebar.")
+                if cas_result.get("error"):
+                    st.caption(f"Parser note: {cas_result['error']}")
+        else:
+            with st.chat_message("assistant"):
+                st.success("CAMS/KFintech parsing failed, but manual MF portfolio values are available and being used.")
+
+    if not tax_ready and not portfolio_ready:
+        with st.chat_message("assistant"):
+            st.info(
+                "Start with the built-in demo or upload at least one PDF. You can also complete the sidebar fallback forms to run the engine without private files."
+            )
+        st.stop()
+
+
+    tax_inputs = TaxInputs(
+        gross_salary=float(tax_payload.get("gross_salary", annual_income)),
+        section_80c=float(tax_payload.get("section_80c", 0.0)),
+        section_80d=float(tax_payload.get("section_80d", 0.0)),
+        hra_exemption=float(tax_payload.get("hra_exemption", 0.0)),
+        employer_nps=float(tax_payload.get("employer_nps", 0.0)),
+        age=int(current_age),
+        current_regime=current_regime,
+    )
+    tax_summary = compare_tax_regimes(tax_inputs) if tax_ready else {
+        "tax_period": "FY 2025-26 (1 Apr 2025 to 31 Mar 2026) / AY 2026-27",
+        "better_regime": "new",
+        "current_tax": {"total_tax": 0.0},
+        "best_tax": {"total_tax": 0.0},
+        "old_regime": {"taxable_income": 0.0, "total_tax": 0.0, "standard_deduction": 50_000.0},
+        "new_regime": {"taxable_income": 0.0, "total_tax": 0.0, "standard_deduction": 75_000.0},
+        "regime_switch_alpha": 0.0,
+        "missed_deduction_alpha": 0.0,
+        "tax_alpha": 0.0,
+        "recommendations": [],
+    }
+
+    portfolio_summary = portfolio_xray(portfolio_payload) if portfolio_ready else {
+        "folios": [],
+        "isins": [],
+        "transaction_dates": [],
+        "transactions": pd.DataFrame(),
+        "holdings": pd.DataFrame(),
+        "portfolio_xirr": None,
+        "cash_flows": pd.DataFrame(),
+        "expense_drag": {"eligible_holdings": pd.DataFrame(), "total_saving_low": 0.0, "total_saving_high": 0.0, "total_saving_mid": 0.0},
+        "fund_xirr": pd.DataFrame(),
+        "recommendations": [],
+    }
+
+    annual_found_money = tax_summary["tax_alpha"] + portfolio_summary["expense_drag"]["total_saving_mid"]
+    monthly_found_money = annual_found_money / 12
+    current_corpus = float(portfolio_summary["holdings"]["current_value"].sum()) if not portfolio_summary["holdings"].empty else 0.0
+
+    fire_plan = calculate_fire_plan(
+        current_age=int(current_age),
+        target_retirement_age=int(target_retirement_age),
+        monthly_expenses=float(monthly_expenses),
+        found_money_monthly=float(monthly_found_money),
+        current_corpus=current_corpus,
+        existing_monthly_investment=float(existing_monthly_investment),
     )
 
-if form16_result.get("available") and not form16_result.get("usable", False):
-    if not manual_tax_available:
-        with st.chat_message("assistant"):
-            st.warning("I could not confidently extract your Form 16. Please use the Manual Tax Fallback panel in the sidebar.")
-            if form16_result.get("error"):
-                st.caption(f"Parser note: {form16_result['error']}")
-    else:
-        with st.chat_message("assistant"):
-            st.success("Form 16 parsing failed, but manual tax values are available and being used.")
+    health = score_money_health(
+        annual_income=float(annual_income or tax_inputs.gross_salary),
+        monthly_expenses=float(monthly_expenses),
+        emergency_fund=float(emergency_fund),
+        life_cover=float(life_cover),
+        monthly_emi=float(monthly_emi),
+        current_tax=float(tax_summary["current_tax"]["total_tax"]),
+        best_tax=float(tax_summary["best_tax"]["total_tax"]),
+        fire_plan=fire_plan,
+        asset_mix=normalize_asset_mix({"Equity": equity, "Debt": debt, "Gold": gold, "Cash": cash}),
+    )
 
-if cas_result.get("available") and not cas_result.get("usable", False):
-    if not manual_portfolio_available:
-        with st.chat_message("assistant"):
-            st.warning("I could not confidently extract your CAMS/KFintech statement. Please use the Manual MF Fallback panel in the sidebar.")
-            if cas_result.get("error"):
-                st.caption(f"Parser note: {cas_result['error']}")
-    else:
-        with st.chat_message("assistant"):
-            st.success("CAMS/KFintech parsing failed, but manual MF portfolio values are available and being used.")
+    analysis_context = {
+        "tax": tax_summary,
+        "portfolio": portfolio_summary,
+        "fire": fire_plan,
+        "health": health,
+        "monthly_found_money": monthly_found_money,
+    }
+    
+    st.session_state['analysis_context'] = analysis_context
 
-if not tax_ready and not portfolio_ready:
-    with st.chat_message("assistant"):
-        st.info(
-            "Start with the built-in demo or upload at least one PDF. You can also complete the sidebar fallback forms to run the engine without private files."
-        )
-    st.stop()
-
-
-tax_inputs = TaxInputs(
-    gross_salary=float(tax_payload.get("gross_salary", annual_income)),
-    section_80c=float(tax_payload.get("section_80c", 0.0)),
-    section_80d=float(tax_payload.get("section_80d", 0.0)),
-    hra_exemption=float(tax_payload.get("hra_exemption", 0.0)),
-    employer_nps=float(tax_payload.get("employer_nps", 0.0)),
-    age=int(current_age),
-    current_regime=current_regime,
-)
-tax_summary = compare_tax_regimes(tax_inputs) if tax_ready else {
-    "tax_period": "FY 2025-26 (1 Apr 2025 to 31 Mar 2026) / AY 2026-27",
-    "better_regime": "new",
-    "current_tax": {"total_tax": 0.0},
-    "best_tax": {"total_tax": 0.0},
-    "old_regime": {"taxable_income": 0.0, "total_tax": 0.0, "standard_deduction": 50_000.0},
-    "new_regime": {"taxable_income": 0.0, "total_tax": 0.0, "standard_deduction": 75_000.0},
-    "regime_switch_alpha": 0.0,
-    "missed_deduction_alpha": 0.0,
-    "tax_alpha": 0.0,
-    "recommendations": [],
-}
-
-portfolio_summary = portfolio_xray(portfolio_payload) if portfolio_ready else {
-    "folios": [],
-    "isins": [],
-    "transaction_dates": [],
-    "transactions": pd.DataFrame(),
-    "holdings": pd.DataFrame(),
-    "portfolio_xirr": None,
-    "cash_flows": pd.DataFrame(),
-    "expense_drag": {"eligible_holdings": pd.DataFrame(), "total_saving_low": 0.0, "total_saving_high": 0.0, "total_saving_mid": 0.0},
-    "fund_xirr": pd.DataFrame(),
-    "recommendations": [],
-}
-
-annual_found_money = tax_summary["tax_alpha"] + portfolio_summary["expense_drag"]["total_saving_mid"]
-monthly_found_money = annual_found_money / 12
-current_corpus = float(portfolio_summary["holdings"]["current_value"].sum()) if not portfolio_summary["holdings"].empty else 0.0
-
-fire_plan = calculate_fire_plan(
-    current_age=int(current_age),
-    target_retirement_age=int(target_retirement_age),
-    monthly_expenses=float(monthly_expenses),
-    found_money_monthly=float(monthly_found_money),
-    current_corpus=current_corpus,
-    existing_monthly_investment=float(existing_monthly_investment),
-)
-
-health = score_money_health(
-    annual_income=float(annual_income or tax_inputs.gross_salary),
-    monthly_expenses=float(monthly_expenses),
-    emergency_fund=float(emergency_fund),
-    life_cover=float(life_cover),
-    monthly_emi=float(monthly_emi),
-    current_tax=float(tax_summary["current_tax"]["total_tax"]),
-    best_tax=float(tax_summary["best_tax"]["total_tax"]),
-    fire_plan=fire_plan,
-    asset_mix=normalize_asset_mix({"Equity": equity, "Debt": debt, "Gold": gold, "Cash": cash}),
-)
-
-analysis_context = {
-    "tax": tax_summary,
-    "portfolio": portfolio_summary,
-    "fire": fire_plan,
-    "health": health,
-    "monthly_found_money": monthly_found_money,
-}
+analysis_context = st.session_state.get('analysis_context', {})
 
 page_view = st.sidebar.radio(
     "Choose View",
