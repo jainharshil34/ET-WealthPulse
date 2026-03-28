@@ -602,8 +602,32 @@ if recalculate or 'analysis_context' not in st.session_state:
     }
     
     st.session_state['analysis_context'] = analysis_context
+    st.session_state['form16_result'] = form16_result
+    st.session_state['cas_result'] = cas_result
+    st.session_state['use_manual_tax'] = use_manual_tax
+    st.session_state['use_manual_portfolio'] = use_manual_portfolio
+    st.session_state['tax_ready'] = tax_ready
+    st.session_state['portfolio_ready'] = portfolio_ready
+    st.session_state['tax_summary'] = tax_summary
+    st.session_state['portfolio_summary'] = portfolio_summary
+    st.session_state['monthly_found_money'] = monthly_found_money
+    st.session_state['current_corpus'] = current_corpus
+    st.session_state['fire_plan'] = fire_plan
+    st.session_state['health'] = health
 
 analysis_context = st.session_state.get('analysis_context', {})
+form16_result = st.session_state.get('form16_result', {})
+cas_result = st.session_state.get('cas_result', {})
+use_manual_tax = st.session_state.get('use_manual_tax', False)
+use_manual_portfolio = st.session_state.get('use_manual_portfolio', False)
+tax_ready = st.session_state.get('tax_ready', False)
+portfolio_ready = st.session_state.get('portfolio_ready', False)
+tax_summary = st.session_state.get('tax_summary', {})
+portfolio_summary = st.session_state.get('portfolio_summary', {})
+monthly_found_money = st.session_state.get('monthly_found_money', 0.0)
+current_corpus = st.session_state.get('current_corpus', 0.0)
+fire_plan = st.session_state.get('fire_plan', {})
+health = st.session_state.get('health', {})
 
 page_view = st.sidebar.radio(
     "Choose View",
