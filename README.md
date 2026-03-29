@@ -1,5 +1,4 @@
-Got it—**clean, no emojis, no flashy stuff, fully professional GitHub README**. Just copy-paste 👇
-
+ET WealthPulse
 ---
 
 
