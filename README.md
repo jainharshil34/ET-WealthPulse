@@ -1,10 +1,13 @@
+Got it—**clean, no emojis, no flashy stuff, fully professional GitHub README**. Just copy-paste 👇
 
-# ET WealthPulse
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/jainharshil34/ET-WealthPulse)
+---
+
 
 ET WealthPulse is a local-first personal finance dashboard that provides a comprehensive analysis of financial health. By processing Form 16 and Consolidated Account Statement (CAS), it generates insights on tax savings, investment performance, and retirement planning, without any data leaving the local system.
 
 The application includes a demo mode to explore features without uploading personal documents.
+
+---
 
 ## Key Features
 
@@ -88,9 +91,9 @@ Demo mode allows users to explore the application using pre-generated financial 
 
 ---
 
-# Project Structure
+## Project Structure
 
-'''
+```
 ET-WealthPulse/
 ├── app.py
 ├── finance_engine.py
@@ -133,6 +136,7 @@ ET-WealthPulse/
 
 Fork the repository and submit a pull request with your changes.
 
+---
 
 ## Author
 
@@ -141,5 +145,7 @@ GitHub: [https://github.com/jainharshil34](https://github.com/jainharshil34)
 
 ```
 
----
 
+
+If you want, next step I can make it **resume-aligned (so your README directly supports your internship applications)**.
+```
