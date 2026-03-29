@@ -1,73 +1,70 @@
-Perfect—this is already a **very strong base**, I’ve just **completed + polished the remaining part** so it feels like a *fully finished, production-level README*.
 
-👉 Just copy everything below and replace your file.
-
----
-
-````markdown
 # ET WealthPulse
+[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/jainharshil34/ET-WealthPulse)
 
-ET WealthPulse is a local-first personal finance dashboard that provides a comprehensive analysis of your financial health. By processing your Form 16 and Consolidated Account Statement (CAS), it generates actionable insights on tax savings, investment performance, retirement planning, and more—all without your data ever leaving your machine.
+ET WealthPulse is a local-first personal finance dashboard that provides a comprehensive analysis of financial health. By processing Form 16 and Consolidated Account Statement (CAS), it generates insights on tax savings, investment performance, and retirement planning, without any data leaving the local system.
 
-The application features a built-in demo mode, allowing you to explore its full capabilities without needing to upload any personal documents.
+The application includes a demo mode to explore features without uploading personal documents.
 
----
+## Key Features
 
-## 🚀 Key Features
+- Document Intelligence  
+  Parses Form 16 and CAMS/KFintech CAS PDFs to extract financial data  
 
-* **Document Intelligence:** Locally parses PDF documents like Form 16 (salary & tax details) and CAMS/KFintech statements (mutual fund holdings and transactions).
-* **Tax Wizard:** Compares Old vs New tax regimes for FY 2025–26 and highlights potential savings ("Tax Alpha").
-* **Portfolio X-Ray:** Calculates portfolio XIRR, evaluates fund performance, and identifies expense drag from regular plans.
-* **FIRE Path Planner:** Models Financial Independence (FIRE) by projecting corpus growth and required investments.
-* **Money Health Score:** Evaluates financial health across Emergency Fund, Insurance, Debt-to-Income, Diversification, Tax Efficiency, and Retirement readiness.
-* **Privacy-Focused:** All processing happens locally. No data storage, no external transmission.
-* **Interactive UI:** Built with Streamlit for clear visualizations and actionable insights.
-* **Manual Fallback:** Allows manual data entry if document parsing fails.
+- Tax Wizard  
+  Compares old and new tax regimes for FY 2025–26 and highlights potential savings  
 
----
+- Portfolio Analysis  
+  Calculates portfolio XIRR, evaluates fund performance, and identifies expense drag  
 
-## ⚙️ How It Works
+- FIRE Planner  
+  Projects financial independence goals and estimates required investments  
 
-1. **Input Data**
-   - Demo Mode (default), or  
-   - Upload Form 16 + CAS PDFs  
+- Financial Health Score  
+  Evaluates emergency fund, insurance, debt, diversification, tax efficiency, and retirement readiness  
 
-2. **Local Processing**
-   - Extracts income, deductions, and investment data  
+- Privacy-Focused  
+  All processing is local; no storage or external transmission  
 
-3. **Financial Analysis**
-   - Tax comparison (Old vs New regime)  
-   - Portfolio XIRR calculation  
-   - Expense ratio impact  
-   - Retirement projections  
-   - Financial health scoring  
+- Interactive Interface  
+  Built using Streamlit with structured insights and visualizations  
 
-4. **Insights Dashboard**
-   - Multi-page Streamlit interface with detailed breakdowns  
+- Manual Input  
+  Allows manual data entry if parsing fails  
 
 ---
 
-## 🛠 Technology Stack
+## How It Works
 
-* **Frontend & App Logic:** [Streamlit](https://streamlit.io/)
-* **Data Processing:** [Pandas](https://pandas.pydata.org/), [NumPy](https://numpy.org/)
-* **Financial Calculations:** [NumPy-Financial](https://numpy.org/numpy-financial/), [pyxirr](https://github.com/Anexen/pyxirr)
-* **PDF Parsing:** [PyMuPDF (fitz)](https://github.com/pymupdf/PyMuPDF)
-* **Visualization:** [Matplotlib](https://matplotlib.org/)
+1. Select Demo Mode or upload Form 16 and CAS PDFs  
+2. Data is processed locally and relevant fields are extracted  
+3. Financial analysis is performed  
+4. Insights are displayed in a multi-page dashboard  
 
 ---
 
-## 📦 Setup and Usage
+## Technology Stack
 
-### Local Installation
+- Streamlit  
+- Pandas  
+- NumPy  
+- NumPy-Financial  
+- pyxirr  
+- PyMuPDF (fitz)  
+- Matplotlib  
 
-1. **Clone the repository**
+---
+
+## Setup and Usage
+
+### Clone Repository
+
 ```bash
 git clone https://github.com/jainharshil34/ET-WealthPulse.git
 cd ET-WealthPulse
 ````
 
-2. **Install dependencies**
+### Install Dependencies
 
 ```bash
 python -m venv venv
@@ -75,104 +72,74 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. **Run the application**
+### Run Application
 
 ```bash
 streamlit run app.py
 ```
 
-App will be available at:
-👉 [http://localhost:8501](http://localhost:8501)
+Application runs at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-### Using Dev Container
+## Demo Mode
 
-This repo includes a pre-configured development container for a consistent setup.
-
-* Works with GitHub Codespaces
-* Works with VS Code Dev Containers
-
-Dependencies install automatically and the Streamlit server starts on launch.
+Demo mode allows users to explore the application using pre-generated financial data without uploading documents.
 
 ---
 
-## 🧪 Demo Mode
+# Project Structure
 
-Explore the app without uploading personal data using pre-generated financial documents and scenarios.
-
----
-
-## 📁 File Structure
-
-```
+'''
 ET-WealthPulse/
-├── app.py                  # Streamlit UI and app flow
-├── finance_engine.py       # Core financial calculations
-├── mock_data_generator.py  # Demo data & PDF generator
-├── requirements.txt        # Dependencies
-├── demo_docs/              # Demo PDFs
-├── .devcontainer/          # Dev container setup
+├── app.py
+├── finance_engine.py
+├── mock_data_generator.py
+├── requirements.txt
+├── demo_docs/
+├── .devcontainer/
 └── README.md
 ```
 
 ---
 
-## 🔒 Privacy
-
-ET WealthPulse follows a **local-first architecture**:
+## Privacy
 
 * No data is stored
-* No API calls are made
-* No financial data leaves your system
+* No external APIs are used
+* All processing happens locally
 
 ---
 
-## ⚠️ Limitations
+## Limitations
 
-* PDF parsing depends on document format consistency
-* Some edge-case financial data may require manual input
-* Limited support for non-mutual fund assets
-
----
-
-## 🔮 Future Improvements
-
-* Support for stocks, crypto, and other asset classes
-* Improved PDF parsing robustness
-* Real-time financial integrations
-* Web deployment with secure local processing
-* ML-based financial recommendations
+* PDF parsing depends on document format
+* Some inputs may require manual entry
+* Limited support for asset classes beyond mutual funds
 
 ---
 
-## 🤝 Contributing
+## Future Improvements
 
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Submit a pull request
+* Support for additional financial instruments
+* Improved parsing accuracy
+* Real-time data integration
+* Web deployment
+* Advanced financial recommendations
 
 ---
 
-## 👤 Author
+## Contributing
 
-**Harshil Jain**
+Fork the repository and submit a pull request with your changes.
+
+
+## Author
+
+Harshil Jain
 GitHub: [https://github.com/jainharshil34](https://github.com/jainharshil34)
 
----
-
-## 💡 Acknowledgements
-
-* Open-source Python ecosystem
-* Financial analytics libraries
-* Streamlit community
-
----
-
-
-
-That’s what turns this into a **top-tier portfolio repo** 🚀
 ```
+
+---
+
