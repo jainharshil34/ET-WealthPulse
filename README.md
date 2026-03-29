@@ -1,59 +1,116 @@
-ET WealthPulse
+
+
+
+
+ET WEALTHPULSE
+---
+ET WealthPulse is a local-first personal finance intelligence platform that acts as a personal CFO. It analyzes Form 16 and Consolidated Account Statement (CAS) to generate actionable insights on tax savings, portfolio performance, and retirement planning — all while ensuring complete data privacy.
+
+The system is built using a modular multi-agent architecture and runs entirely on the user's machine.
+
 ---
 
+## Overview
 
-ET WealthPulse is a local-first personal finance dashboard that provides a comprehensive analysis of financial health. By processing Form 16 and Consolidated Account Statement (CAS), it generates insights on tax savings, investment performance, and retirement planning, without any data leaving the local system.
+ET WealthPulse transforms raw financial documents into structured insights by combining document parsing, financial modeling, and interactive visualization.
 
-The application includes a demo mode to explore features without uploading personal documents.
+It provides:
+- Tax optimization insights (Tax Alpha)
+- Portfolio performance analysis (XIRR)
+- Expense ratio savings detection
+- FIRE (Financial Independence) planning
+- Financial health scoring
+
+All processing is performed locally with zero data transmission.
 
 ---
 
 ## Key Features
 
 - Document Intelligence  
-  Parses Form 16 and CAMS/KFintech CAS PDFs to extract financial data  
+  Extracts structured data from Form 16 and CAMS/KFintech CAS PDFs  
 
 - Tax Wizard  
-  Compares old and new tax regimes for FY 2025–26 and highlights potential savings  
+  Compares old vs new tax regimes for FY 2025–26 and identifies optimal choice  
 
-- Portfolio Analysis  
-  Calculates portfolio XIRR, evaluates fund performance, and identifies expense drag  
+- Portfolio X-Ray  
+  Computes XIRR, evaluates fund performance, and detects expense inefficiencies  
 
 - FIRE Planner  
-  Projects financial independence goals and estimates required investments  
+  Projects retirement corpus and calculates required investment gap  
 
-- Financial Health Score  
-  Evaluates emergency fund, insurance, debt, diversification, tax efficiency, and retirement readiness  
+- Money Health Score  
+  Scores financial health across six key dimensions  
 
-- Privacy-Focused  
-  All processing is local; no storage or external transmission  
+- Privacy-First Architecture  
+  No storage, no APIs, no external data transfer  
 
-- Interactive Interface  
-  Built using Streamlit with structured insights and visualizations  
+- Interactive Dashboard  
+  Multi-page Streamlit interface with detailed analytics  
 
-- Manual Input  
-  Allows manual data entry if parsing fails  
+- Manual Fallback System  
+  Handles parsing failures with dynamic user input panels  
+
+---
+
+## System Architecture
+
+ET WealthPulse follows a modular multi-agent design where each component performs a specific financial task.
+
+### Agent Components
+
+- Document Parser Agent  
+  Extracts financial data from PDFs  
+
+- Tax Wizard Agent  
+  Computes tax liability and savings  
+
+- Portfolio X-Ray Agent  
+  Analyzes transactions and returns  
+
+- FIRE Planner Agent  
+  Models retirement projections  
+
+- Money Health Agent  
+  Evaluates overall financial health  
+
+- Orchestrator Agent  
+  Coordinates agents, manages state, and drives UI  
+<img width="748" height="806" alt="image" src="https://github.com/user-attachments/assets/612ed36d-a40b-416e-ad17-5760f649d120" />
+
 
 ---
 
 ## How It Works
 
-1. Select Demo Mode or upload Form 16 and CAS PDFs  
-2. Data is processed locally and relevant fields are extracted  
-3. Financial analysis is performed  
-4. Insights are displayed in a multi-page dashboard  
+1. User selects Demo Mode or uploads Form 16 and CAS PDFs  
+2. Document Parser extracts structured data  
+3. Analysis agents process financial information  
+4. Orchestrator compiles results  
+5. Insights are displayed in the dashboard  
 
 ---
 
-## Technology Stack
+## Technical Highlights
 
-- Streamlit  
-- Pandas  
-- NumPy  
-- NumPy-Financial  
-- pyxirr  
-- PyMuPDF (fitz)  
-- Matplotlib  
+- Fully local execution with zero data leakage  
+- Confidence-based document parsing with fallback handling  
+- Accurate financial modeling:
+  - Latest tax slabs (FY 2025–26)  
+  - XIRR computation  
+  - FIRE projections (12% return, 6% inflation, 4% withdrawal)  
+- Detection of “hidden savings” via expense ratio optimization  
+- Modular design enabling future extensibility  
+
+---
+
+## Tech Stack
+
+- Streamlit (UI & orchestration)  
+- Pandas, NumPy (data processing)  
+- NumPy-Financial, pyxirr (financial calculations)  
+- PyMuPDF (PDF parsing)  
+- Matplotlib (visualization)  
 
 ---
 
@@ -86,7 +143,7 @@ Application runs at: [http://localhost:8501](http://localhost:8501)
 
 ## Demo Mode
 
-Demo mode allows users to explore the application using pre-generated financial data without uploading documents.
+Includes a built-in demo system with realistic financial data for testing without uploading personal documents.
 
 ---
 
@@ -105,35 +162,45 @@ ET-WealthPulse/
 
 ---
 
+## Error Handling & Resilience
+
+* Confidence thresholds for document parsing
+* Automatic fallback to manual input
+* Safe defaults for missing data
+* Handling of edge cases (empty portfolios, invalid inputs)
+* Cached pipeline for performance
+
+---
+
 ## Privacy
 
-* No data is stored
-* No external APIs are used
-* All processing happens locally
+* No data storage
+* No external APIs
+* Fully local computation
 
 ---
 
 ## Limitations
 
-* PDF parsing depends on document format
-* Some inputs may require manual entry
-* Limited support for asset classes beyond mutual funds
+* Parsing accuracy depends on document format
+* Limited support for non-mutual fund assets
+* Some manual intervention may be required
 
 ---
 
-## Future Improvements
+## Future Work
 
-* Support for additional financial instruments
-* Improved parsing accuracy
-* Real-time data integration
-* Web deployment
-* Advanced financial recommendations
+* Support for additional asset classes (stocks, crypto)
+* Improved parsing robustness
+* Real-time integrations
+* Web deployment with secure local processing
+* Advanced recommendation systems
 
 ---
 
 ## Contributing
 
-Fork the repository and submit a pull request with your changes.
+Fork the repository and submit a pull request.
 
 ---
 
@@ -142,9 +209,17 @@ Fork the repository and submit a pull request with your changes.
 Harshil Jain
 GitHub: [https://github.com/jainharshil34](https://github.com/jainharshil34)
 
+---
+
+## Acknowledgements
+
+* Open-source Python ecosystem
+* Financial analytics libraries
+* Streamlit community
+
 ```
 
 
 
-If you want, next step I can make it **resume-aligned (so your README directly supports your internship applications)**.
+That pushes it into *top 1% GitHub projects*.
 ```
